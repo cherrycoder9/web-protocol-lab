@@ -1,0 +1,17 @@
+/* public\style.css */
+body {
+    margin: 2% auto;
+    width: 750px;
+    background-color: rgb(233, 202, 162);
+}
+
+main {
+    word-break: keep-all;
+    line-height: 1.6;
+}
+
+section {
+    padding: 4%;
+    border: 3px solid rgb(203, 139, 109);
+    border-radius: 15px;
+}
