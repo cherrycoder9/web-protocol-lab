@@ -8,14 +8,14 @@ async function serveStaticFile(filePath, res) {
         // 요청된 파일을 비동기로 읽어옴
         const data = await readFile(filePath);
 
-        // 파일의 확장자에 맞는 적절한 MINE 타입 설정
+        // 파일의 확장자에 맞는 적절한 MIME 타입 설정
         res.writeHead(200, { "Content-Type": getContentType(filePath) });
 
         // 읽은 파일 내용을 응답으로 반환
         res.end(data);
     } catch {
         // 파일이 존재하지 않으면 404 응답
-        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.writeHead(404, { "Content-Type": "text/plain; charset=UTF-8" });
         res.end("404 Not Found");
     }
 }
@@ -60,14 +60,14 @@ export async function handleRequest(req, res) {
         }
 
         // 특정 API 요청이 아니라면 기본 응답 반환
-        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.writeHead(200, { "Content-Type": "text/plain; charset=UTF-8" });
         // curl http://localhost:3000/hello
         res.end("서버가 정상적으로 작동 중입니다.");
     }
     // 허용되지 않은 HTTP 메서드 처리
     else {
         // 서버에서 허용하지 않은 HTTP 메서드를 사용한 경우 
-        res.writeHead(405, { "Content-Type": "text/plain" });
+        res.writeHead(405, { "Content-Type": "text/plain; charset=UTF-8" });
         // curl -X POST http://localhost:3000/
         res.end("허용되지 않은 요청 방식입니다.");
     }
