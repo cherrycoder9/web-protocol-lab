@@ -4,13 +4,13 @@
 
 ## Server Execution
 
-```sh
+```powershell
 node src/server.mjs
 ```
 
 ## Browser Access
 
-```sh
+```powershell
 http://localhost:3000
 ```
 
