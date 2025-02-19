@@ -20,9 +20,9 @@ http://localhost:3000
 
 ## Not Implemented Features
 
-- [ ] TLS 1.3
 - [ ] HTTPS
-- [ ] HSTS
+- [ ] HSTS (HTTP Strict Transport Security)
+- [ ] TLS 1.3
 - [ ] OCSP Stapling
 - [ ] Automatic Certificate Management (ACME)
 - [ ] Encrypted Client Hello (ECH)
