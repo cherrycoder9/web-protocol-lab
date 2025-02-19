@@ -11,16 +11,16 @@ node src/server.mjs
 ## Browser Access
 
 ```powershell
-http://localhost:3000
+https://localhost:443
 ```
 
 ## Implemented Features
 
 - [x] Asynchronous I/O
+- [x] HTTPS
 
 ## Not Implemented Features
 
-- [ ] HTTPS
 - [ ] HSTS (HTTP Strict Transport Security)
 - [ ] TLS 1.3
 - [ ] OCSP Stapling
