@@ -23,7 +23,7 @@ const server = https.createServer(options, async (req, res) => {
     } catch (error) {
         // 서버 내부 오류가 발생했을때 예외 처리 
         console.error("서버 오류", error);
-        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.writeHead(500, { "Content-Type": "text/plain; charset=UTF-8" });
         res.end("서버 내부 오류 발생");
     }
 });
@@ -34,5 +34,4 @@ const PORT = 443;
 // 지정된 포트에서 서버 시작
 server.listen(PORT, () => {
     console.log(`실행중인 포트: ${PORT}`);
-
 });
