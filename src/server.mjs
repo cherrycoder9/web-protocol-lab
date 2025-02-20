@@ -14,7 +14,6 @@ const options = {
     pfx: fs.readFileSync(path.resolve("localhost.pfx")),
     passphrase: process.env.PFX_PASSWORD, // .env에서 불러오기 
 };
-
 // HTTPS 서버 생성
 const server = https.createServer(options, async (req, res) => {
     try {
