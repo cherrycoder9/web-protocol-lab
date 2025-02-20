@@ -12,8 +12,16 @@ dotenv.config(); // .env 파일 로드
 // PFX 인증서 로드 
 const options = {
     pfx: fs.readFileSync(path.resolve("localhost.pfx")),
-    passphrase: process.env.PFX_PASSWORD, // .env에서 불러오기 
+    passphrase: process.env.PFX_PASSWORD, // .env에서 불러오기
+
+    // TLS 1.3을 강제하기 위한 설정, nodejs 12.9.0 버전부터 지원하기 시작함 
+    // minVersion과 maxVersion을 모두 "TLSv1.3"으로 설정하면 TLS 1.3만 사용하도록 제한됨 
+    // 개발자도구 -> 보안 -> 주요출처 -> 연결 -> 프로토콜 에서 확인가능 
+    minVersion: "TLSv1.3",
+    maxVersion: "TLSv1.3",
+    // 최신 TLS 1.3 암호 Suite나 기타 보안 옵션을 필요에 따라 추가할 수 있음 
 };
+
 // HTTPS 서버 생성
 const server = https.createServer(options, async (req, res) => {
     try {
