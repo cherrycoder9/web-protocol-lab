@@ -18,10 +18,10 @@ https://localhost:443
 
 - [x] Asynchronous I/O
 - [x] HTTPS
+- [x] HSTS (HTTP Strict Transport Security)
 
 ## Not Implemented Features
 
-- [ ] HSTS (HTTP Strict Transport Security)
 - [ ] TLS 1.3
 - [ ] OCSP Stapling
 - [ ] Automatic Certificate Management (ACME)
