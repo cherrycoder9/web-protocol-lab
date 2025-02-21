@@ -20,10 +20,10 @@ https://localhost:443
 - [x] HTTPS
 - [x] HSTS (HTTP Strict Transport Security)
 - [x] TLS 1.3
+- [x] OCSP Stapling
 
 ## Not Implemented Features
 
-- [ ] OCSP Stapling
 - [ ] Automatic Certificate Management (ACME)
 - [ ] Encrypted Client Hello (ECH)
 - [ ] TLS Encrypted ClientHello (ECH) v2
