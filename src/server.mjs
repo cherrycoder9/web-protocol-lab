@@ -6,11 +6,12 @@ import fs from "node:fs";
 import https from "node:https";
 import path from "node:path";
 import { handleRequest } from "./handler.mjs"; // 요청을 처리하는 핸들러 파일 불러오기
+import { startOCSPStapling } from "./ocsp-updater.mjs";
 
 dotenv.config(); // .env 파일 로드
 
-// PFX 인증서 로드 
-const options = {
+// 기본 TLS 옵션 (pfx 인증서, TLS 1.3 강제 등)
+const baseOptions = {
     pfx: fs.readFileSync(path.resolve("localhost.pfx")),
     passphrase: process.env.PFX_PASSWORD, // .env에서 불러오기
 
@@ -19,11 +20,16 @@ const options = {
     // 개발자도구 -> 보안 -> 주요출처 -> 연결 -> 프로토콜 에서 확인가능 
     minVersion: "TLSv1.3",
     maxVersion: "TLSv1.3",
-    // 최신 TLS 1.3 암호 Suite나 기타 보안 옵션을 필요에 따라 추가할 수 있음 
+    // 최신 TLS 1.3 암호 Suite나 기타 보안 옵션을 필요에 따라 추가할 수 있음
+
+    // 초기 OCSP 응답은 빈 버퍼로 설정함 
+    // openssl s_client -connect localhost:443 -status
+    // 위 명령어로 확인가능, 빈 버퍼는 실제로 적용되지 않음 
+    ocspResponse: Buffer.alloc(0),
 };
 
 // HTTPS 서버 생성
-const server = https.createServer(options, async (req, res) => {
+const server = https.createServer(baseOptions, async (req, res) => {
     try {
         // 요청을 받아서 handler.mjs에서 처리하도록 전달
         await handleRequest(req, res);
@@ -41,4 +47,6 @@ const PORT = 443;
 // 지정된 포트에서 서버 시작
 server.listen(PORT, () => {
     console.log(`실행중인 포트: ${PORT}`);
+    // OCSP Stapling 업데이트 시작 
+    startOCSPStapling(server, baseOptions);
 });
