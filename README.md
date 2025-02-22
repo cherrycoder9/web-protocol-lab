@@ -21,18 +21,10 @@ https://localhost:443
 - [x] HSTS (HTTP Strict Transport Security)
 - [x] TLS 1.3
 - [x] OCSP Stapling
+- [x] Zero-RTT (0-RTT)
 
 ## Not Implemented Features
 
-- [ ] Automatic Certificate Management (ACME)
-- [ ] Encrypted Client Hello (ECH)
-- [ ] TLS Encrypted ClientHello (ECH) v2
-- [ ] HTTP/3 (QUIC)
-- [ ] QUIC Datagram
-- [ ] Multipath QUIC
-- [ ] BBR (Congestion Control)
-- [ ] BBRv3
-- [ ] Zero-RTT (0-RTT)
 - [ ] HTTP Prioritization
 - [ ] Rate Limiting
 - [ ] CORS
