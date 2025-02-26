@@ -6,6 +6,7 @@ import crypto from "node:crypto"; // 세션 티켓 키 생성을 위해 사용
 import fs from "node:fs";
 import https from "node:https";
 import path from "node:path";
+import { handleCORS } from "./cors.mjs";
 import { addRequest } from "./http-prioritization.mjs";
 import { checkRateLimit } from "./late-limiter.mjs";
 import { startOCSPStapling } from "./ocsp-updater.mjs";
@@ -37,6 +38,11 @@ const baseOptions = {
 
 // HTTPS 서버 생성 - 요청은 handler.mjs에서 처리 
 const server = https.createServer(baseOptions, async (req, res) => {
+    // CORS 처리, 요청에 대해 CORS 헤더를 추가하고 OPTIONS 요청이면 즉시 응답 
+    if (handleCORS(req, res)) {
+        return; // OPTIONS 요청은 여기서 종료 
+    }
+
     // Rate Limiting 체크, 요청을 큐에 추가하기 전 호출
     if (!checkRateLimit(req, res)) {
         // Rate limit에 걸렸다면 응답이 이미 전송되었으므로 더이상 진행하지 않음

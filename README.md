@@ -24,10 +24,10 @@ https://localhost:443
 - [x] Zero-RTT (0-RTT)
 - [x] HTTP Prioritization
 - [x] Rate Limiting
+- [x] CORS
 
 ## Not Implemented Features
 
-- [ ] CORS
 - [ ] Content Security Policy (CSP)
 - [ ] Trusted Types (Enhanced CSP)
 - [ ] ETag
