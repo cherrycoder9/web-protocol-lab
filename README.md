@@ -23,10 +23,10 @@ https://localhost:443
 - [x] OCSP Stapling
 - [x] Zero-RTT (0-RTT)
 - [x] HTTP Prioritization
+- [x] Rate Limiting
 
 ## Not Implemented Features
 
-- [ ] Rate Limiting
 - [ ] CORS
 - [ ] Content Security Policy (CSP)
 - [ ] Trusted Types (Enhanced CSP)

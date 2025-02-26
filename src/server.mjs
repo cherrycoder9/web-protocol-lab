@@ -7,6 +7,7 @@ import fs from "node:fs";
 import https from "node:https";
 import path from "node:path";
 import { addRequest } from "./http-prioritization.mjs";
+import { checkRateLimit } from "./late-limiter.mjs";
 import { startOCSPStapling } from "./ocsp-updater.mjs";
 import { setupZeroRTT } from "./zeroRTT.mjs";
 
@@ -36,6 +37,12 @@ const baseOptions = {
 
 // HTTPS 서버 생성 - 요청은 handler.mjs에서 처리 
 const server = https.createServer(baseOptions, async (req, res) => {
+    // Rate Limiting 체크, 요청을 큐에 추가하기 전 호출
+    if (!checkRateLimit(req, res)) {
+        // Rate limit에 걸렸다면 응답이 이미 전송되었으므로 더이상 진행하지 않음
+        return;
+    }
+
     // HTTP Prioritization 모듈을 통해 요청을 큐에 추가
     addRequest(req, res);
 });
