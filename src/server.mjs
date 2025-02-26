@@ -6,7 +6,7 @@ import crypto from "node:crypto"; // 세션 티켓 키 생성을 위해 사용
 import fs from "node:fs";
 import https from "node:https";
 import path from "node:path";
-import { handleRequest } from "./handler.mjs"; // 요청을 처리하는 핸들러 파일 불러오기
+import { addRequest } from "./http-prioritization.mjs";
 import { startOCSPStapling } from "./ocsp-updater.mjs";
 import { setupZeroRTT } from "./zeroRTT.mjs";
 
@@ -36,15 +36,8 @@ const baseOptions = {
 
 // HTTPS 서버 생성 - 요청은 handler.mjs에서 처리 
 const server = https.createServer(baseOptions, async (req, res) => {
-    try {
-        // 요청을 받아서 handler.mjs에서 처리하도록 전달
-        await handleRequest(req, res);
-    } catch (error) {
-        // 서버 내부 오류가 발생했을때 예외 처리 
-        console.error("서버 오류", error);
-        res.writeHead(500, { "Content-Type": "text/plain; charset=UTF-8" });
-        res.end("서버 내부 오류 발생");
-    }
+    // HTTP Prioritization 모듈을 통해 요청을 큐에 추가
+    addRequest(req, res);
 });
 
 // 서버가 실행될 포트 번호

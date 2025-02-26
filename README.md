@@ -22,10 +22,10 @@ https://localhost:443
 - [x] TLS 1.3
 - [x] OCSP Stapling
 - [x] Zero-RTT (0-RTT)
+- [x] HTTP Prioritization
 
 ## Not Implemented Features
 
-- [ ] HTTP Prioritization
 - [ ] Rate Limiting
 - [ ] CORS
 - [ ] Content Security Policy (CSP)
