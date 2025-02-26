@@ -25,10 +25,10 @@ https://localhost:443
 - [x] HTTP Prioritization
 - [x] Rate Limiting
 - [x] CORS
+- [x] Content Security Policy (CSP)
 
 ## Not Implemented Features
 
-- [ ] Content Security Policy (CSP)
 - [ ] Trusted Types (Enhanced CSP)
 - [ ] ETag
 - [ ] Caching (Cache-Control)

@@ -1,6 +1,7 @@
 // src\handler.mjs
 import { readFile } from "node:fs/promises";
 import path from "node:path"; // 파일 경로 처리를 위한 모듈
+import { applyCSP } from "./csp.mjs";
 
 /**
  * 정적 파일을 제공하는 함수
@@ -15,7 +16,10 @@ async function serveStaticFile(filePath, res) {
         const data = await readFile(filePath);
 
         // 파일의 확장자에 맞는 적절한 MIME 타입 설정후 200 응답 전송 
-        res.writeHead(200, { "Content-Type": getContentType(filePath) });
+        res.writeHead(200, {
+            "Content-Type": getContentType(filePath)
+            // CSP 헤더는 이미 handleRequest()에서 적용됨 
+        });
         // 인자를 넘기지 않으면 그냥 응답을 끝내고 데이터를 넘기면 그 데이터를 마지막으로 보내고 끝냄
         res.end(data); // 응답을 완료하고 클라이언트와의 연결을 종료 
     } catch {
@@ -56,6 +60,10 @@ function getContentType(filePath) {
  * @param {import('http').ServerResponse} res - 응답 객체 
  */
 export async function handleRequest(req, res) {
+    // 모든 응답에 Content Security Policy(CSP) 헤더 적용 
+    applyCSP(res);
+
+
     // HSTS 헤더 설정, 브라우저에 1년간 HTTPS 사용 강제, 서브도메인 포함, preload 옵션 적용
     // 왜 HSTS를 구현하는가?
     // HTTPS 연결 사용을 강제해 중간자 공격과 프로토콜 다운그레이드 공격 방지 

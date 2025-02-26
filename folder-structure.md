@@ -6,6 +6,7 @@
         └── style.css
     └── 📁src
         └── cors.mjs
+        └── csp.mjs
         └── handler.mjs
         └── http-prioritization.mjs
         └── late-limiter.mjs
