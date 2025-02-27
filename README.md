@@ -28,10 +28,10 @@ https://localhost:443
 - [x] Content Security Policy (CSP)
 - [x] Trusted Types (Enhanced CSP)
 - [x] ETag
+- [x] Caching (Cache-Control)
 
 ## Not Implemented Features
 
-- [ ] Caching (Cache-Control)
 - [ ] Zstd
 - [ ] Load Balancing
 - [ ] Reverse Proxy

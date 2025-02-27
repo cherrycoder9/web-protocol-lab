@@ -34,7 +34,11 @@ async function serveStaticFile(req, filePath, res) {
         res.writeHead(200, {
             "Content-Type": contentType,
             "ETag": etag,
-            // CSP 헤더는 이미 handleRequest()에서 적용됨 
+            // CSP 헤더는 이미 handleRequest()에서 적용됨
+            // Cache-Control 헤더: 'public'은 모든 캐시가 저장 가능
+            // max-age는 초 단위로 캐시 유효시간 설정 
+            // 소문자로 해도 됨 
+            "cache-control": "public, max-age=30"
         });
         // 인자를 넘기지 않으면 그냥 응답을 끝내고 데이터를 넘기면 그 데이터를 마지막으로 보내고 끝냄
         res.end(data); // 응답을 완료하고 클라이언트와의 연결을 종료 
