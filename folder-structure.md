@@ -7,6 +7,7 @@
     └── 📁src
         └── cors.mjs
         └── csp.mjs
+        └── etag.mjs
         └── handler.mjs
         └── http-prioritization.mjs
         └── late-limiter.mjs

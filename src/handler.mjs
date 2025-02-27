@@ -2,22 +2,38 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path"; // 파일 경로 처리를 위한 모듈
 import { applyCSP } from "./csp.mjs";
+import { generateETag } from "./etag.mjs";
 
 /**
- * 정적 파일을 제공하는 함수
+ * 정적 파일을 제공하는 함수 (ETag 지원 포함)
  *
  * @async
+ * @param {import('http').IncomingMessage} req - 클라이언트 요청 객체
  * @param {string} filePath - 제공할 파일의 경로 
  * @param {import('http').ServerResponse} res - 응답 객체 
  */
-async function serveStaticFile(filePath, res) {
+async function serveStaticFile(req, filePath, res) {
     try {
         // 요청된 파일을 비동기로 읽어옴
         const data = await readFile(filePath);
+        // 파일 데이터를 기반으로 ETag 생성
+        const etag = generateETag(data);
 
-        // 파일의 확장자에 맞는 적절한 MIME 타입 설정후 200 응답 전송 
+        // 클라이언트가 보낸 If-None-Match 헤더와 비교 
+        if (req.headers["if-none-match"] === etag) {
+            // 파일이 변경되지 않았다면 304 Not Modified 응답 
+            res.writeHead(304);
+            res.end();
+            return;
+        }
+
+        // 파일의 확장자에 따른 적절한 MIME 타입 결정
+        const contentType = getContentType(filePath);
+
+        // 200 응답과 함께 파일 데이터 및 ETag 헤더 전송 
         res.writeHead(200, {
-            "Content-Type": getContentType(filePath)
+            "Content-Type": contentType,
+            "ETag": etag,
             // CSP 헤더는 이미 handleRequest()에서 적용됨 
         });
         // 인자를 넘기지 않으면 그냥 응답을 끝내고 데이터를 넘기면 그 데이터를 마지막으로 보내고 끝냄
@@ -80,7 +96,7 @@ export async function handleRequest(req, res) {
     if (method === "GET") {
         // 루트 경로('/') 요청시 index.html 반환
         if (url === "/") {
-            return serveStaticFile("./public/index.html", res);
+            return serveStaticFile(req, "./public/index.html", res);
         }
 
         // /public/ 경로의 정적 파일 제공
@@ -93,7 +109,7 @@ export async function handleRequest(req, res) {
             // 하지만 이 경로는 파일 시스템에서 존재하지 않음
             // 서버 루트가 아니라 OS의 루트 디렉토리에서 찾게 된다
             // 따라서 public 하위 폴더와 파일들이 적용되지 않게 된다
-            return serveStaticFile("." + url, res);
+            return serveStaticFile(req, "." + url, res);
             // return serveStaticFile(url, res);
         }
 

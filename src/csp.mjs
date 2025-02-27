@@ -11,6 +11,8 @@
  * default-src 'self': 기본적으로 같은 출처에서만 리소스를 로드
  * script-src 'self': 스크립트는 같은 출처에서만 로드 
  * style-src 'self': 스타일시트 역시 같은 출처에서만 로드 
+ * require-trusted-types-for 'script': 동적 스크립트 생성시 Trusted Types 정책을 반드시 사용하도록 강제
+ * trusted-types default: 'default' 라는 이름의 기본 Trusted Types 정책 사용 (추가 정책이 필요한 경우 확장 가능) 
  * 
  * @param {import('http').ServerResponse} res - HTTP 응답 객체 
  */
@@ -18,10 +20,10 @@ export function applyCSP(res) {
     // CSP 정책을 배열로 구성한 다음 세미콜론으로 연결함 
     const cspPolicy = [
         "default-src 'self'",
-        "script - src 'self'",
-        "style - src 'self'",
-        "require-trusted-types-for 'script'", // 동적 스크립트 생성시 Trusted Types 정책을 반드시 사용하도록 강제 
-        "trusted-types default" // 'default' 라는 이름의 기본 Trusted Types 정책 사용 (추가 정책이 필요한 경우 확장 가능)
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline'",
+        "require-trusted-types-for 'script'",
+        "trusted-types default"
     ].join("; ");
 
 
