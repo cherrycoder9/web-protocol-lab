@@ -26,10 +26,10 @@ https://localhost:443
 - [x] Rate Limiting
 - [x] CORS
 - [x] Content Security Policy (CSP)
+- [x] Trusted Types (Enhanced CSP)
 
 ## Not Implemented Features
 
-- [ ] Trusted Types (Enhanced CSP)
 - [ ] ETag
 - [ ] Caching (Cache-Control)
 - [ ] Zstd
