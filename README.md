@@ -29,10 +29,10 @@ https://localhost:443
 - [x] Trusted Types (Enhanced CSP)
 - [x] ETag
 - [x] Caching (Cache-Control)
+- [x] Zstd
 
 ## Not Implemented Features
 
-- [ ] Zstd
 - [ ] Load Balancing
 - [ ] Reverse Proxy
 - [ ] gRPC Support

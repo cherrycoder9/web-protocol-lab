@@ -3,9 +3,10 @@ import { readFile } from "node:fs/promises";
 import path from "node:path"; // 파일 경로 처리를 위한 모듈
 import { applyCSP } from "./csp.mjs";
 import { generateETag } from "./etag.mjs";
+import { compress as compressZstd } from "./zstd.mjs";
 
 /**
- * 정적 파일을 제공하는 함수 (ETag 지원 포함)
+ * 정적 파일을 제공하는 함수 (ETag 및 Zstd 압축 지원 포함)
  *
  * @async
  * @param {import('http').IncomingMessage} req - 클라이언트 요청 객체
@@ -14,12 +15,12 @@ import { generateETag } from "./etag.mjs";
  */
 async function serveStaticFile(req, filePath, res) {
     try {
-        // 요청된 파일을 비동기로 읽어옴
-        const data = await readFile(filePath);
-        // 파일 데이터를 기반으로 ETag 생성
-        const etag = generateETag(data);
+        // 원본 파일 데이터를 비동기로 읽어옴 
+        const originalData = await readFile(filePath);
+        // 원본 데이터를 바탕으로 ETag 생성 (압축 전 데이터 기준)
+        const etag = generateETag(originalData);
 
-        // 클라이언트가 보낸 If-None-Match 헤더와 비교 
+        // 클라이언트가 이전에 동일한 ETag를 보냈다면 304 Not Modified 응답 
         if (req.headers["if-none-match"] === etag) {
             // 파일이 변경되지 않았다면 304 Not Modified 응답 
             res.writeHead(304);
@@ -30,18 +31,42 @@ async function serveStaticFile(req, filePath, res) {
         // 파일의 확장자에 따른 적절한 MIME 타입 결정
         const contentType = getContentType(filePath);
 
-        // 200 응답과 함께 파일 데이터 및 ETag 헤더 전송 
-        res.writeHead(200, {
-            "Content-Type": contentType,
-            "ETag": etag,
+        // 클라이언트의 Accept-Encoding 헤더 확인 (없으면 빈 문자열)
+        const acceptEncoding = req.headers["accept-encoding"] || "";
+        let responseData = originalData;
+        const headers = {
+            "content-type": contentType,
+            "etag": etag,
             // CSP 헤더는 이미 handleRequest()에서 적용됨
             // Cache-Control 헤더: 'public'은 모든 캐시가 저장 가능
             // max-age는 초 단위로 캐시 유효시간 설정 
             // 소문자로 해도 됨 
-            "cache-control": "public, max-age=30"
-        });
+            "cache-control": "public, max-age=30",
+            "vary": "accept-encoding"
+        };
+
+        // 클라이언트가 Zstd 압축을 지원하는 경우 압축 수행
+        if (acceptEncoding.includes("zstd")) {
+            try {
+                const compressedData = await compressZstd(originalData);
+                // 압축 함수가 실제로 압축을 수행했는지 확인
+                if (!compressedData.equals(originalData)) {
+                    responseData = compressedData;
+                    headers["content-encoding"] = "zstd";
+                    console.log("Zstd를 사용해 압축");
+                } else {
+                    console.warn("Zstd 압축이 적용되지 않았습니다. 원본데이터 전송");
+                }
+            } catch (compressionError) {
+                // 압축 실패시 로그 기록후 원본 데이터 전송
+                console.error("Zstd 압축 실패. 압축안된 데이터 전송", compressionError);
+            }
+        }
+
+        // 200 응답과 함께 파일 데이터 및 ETag 헤더 전송 
+        res.writeHead(200, headers);
         // 인자를 넘기지 않으면 그냥 응답을 끝내고 데이터를 넘기면 그 데이터를 마지막으로 보내고 끝냄
-        res.end(data); // 응답을 완료하고 클라이언트와의 연결을 종료 
+        res.end(responseData); // 응답을 완료하고 클라이언트와의 연결을 종료 
     } catch {
         // 파일이 존재하지 않으면 404 응답 전송
         res.writeHead(404, { "Content-Type": "text/plain; charset=UTF-8" });
@@ -130,3 +155,6 @@ export async function handleRequest(req, res) {
         res.end("허용되지 않은 요청 방식입니다.");
     }
 }
+
+export { serveStaticFile };
+
