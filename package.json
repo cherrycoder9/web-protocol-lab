@@ -24,6 +24,8 @@
     "globals": "^15.15.0"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.13.0",
+    "@grpc/proto-loader": "^0.7.13",
     "dotenv": "^16.4.7"
   }
 }

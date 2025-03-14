@@ -7,6 +7,7 @@ import fs from "node:fs";
 import https from "node:https";
 import path from "node:path";
 import { handleCORS } from "./cors.mjs";
+import { startGRPCServer } from "./grpc-server.mjs";
 import { addRequest } from "./http-prioritization.mjs";
 import { checkRateLimit } from "./late-limiter.mjs";
 import { startOCSPStapling } from "./ocsp-updater.mjs";
@@ -62,4 +63,7 @@ server.listen(PORT, () => {
     // OCSP Stapling 업데이트 시작 
     startOCSPStapling(server, baseOptions);
     setupZeroRTT(server);
+    // gRPC 서버도 함께 시작함
+    // gRPC 서버는 별도의 포트(50051)에서 인바운드 gRPC 요청을 처리함
+    startGRPCServer();
 });

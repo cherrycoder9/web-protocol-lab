@@ -30,12 +30,10 @@ https://localhost:443
 - [x] ETag
 - [x] Caching (Cache-Control)
 - [x] Zstd
+- [x] gRPC Support
 
 ## Not Implemented Features
 
-- [ ] Load Balancing
-- [ ] Reverse Proxy
-- [ ] gRPC Support
 - [ ] WebTransport
 - [ ] DNS over HTTPS (DoH)
 - [ ] DoT (DNS over TLS)

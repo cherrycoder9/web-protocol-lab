@@ -1,0 +1,18 @@
+syntax = "proto3"; // proto3 문법 사용 
+
+package helloworld; // 패키지 이름, 서비스와 메시지를 그룹화
+
+// 클라이언트의 인사 요청에 대해 인사 메시지 반환
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+// 클라이언트가 전송할 요청 메시지 정의 
+message HelloRequest {
+  string name = 1;
+}
+
+// 서버가 응답할 메시지 정의 
+message HelloReply {
+  string message = 1;
+}
