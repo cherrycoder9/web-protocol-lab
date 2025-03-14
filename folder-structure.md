@@ -1,5 +1,7 @@
 ```
 └── 📁web-protocol-lab
+    └── 📁proto
+        └── helloworld.proto
     └── 📁public
         └── index.html
         └── script.js
@@ -8,6 +10,7 @@
         └── cors.mjs
         └── csp.mjs
         └── etag.mjs
+        └── grpc-server.mjs
         └── handler.mjs
         └── http-prioritization.mjs
         └── late-limiter.mjs
